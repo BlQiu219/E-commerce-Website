@@ -486,13 +486,15 @@ const vnpayReturn = async (req, res) => {
 
 
 //All order data for Admin Panel
+// Lấy tất cả đơn hàng cho admin, sắp xếp mới nhất trước
 const allOrder = async (req, res) => {
     try {
-        const orders = await orderModel.find({});
+        // Nếu model có trường createdAt, ưu tiên dùng createdAt. Nếu không, dùng date.
+        const orders = await orderModel.find({}).sort({ createdAt: -1, date: -1 });
         res.json({ success: true, orders });
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 

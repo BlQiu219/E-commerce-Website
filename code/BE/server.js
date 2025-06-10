@@ -7,20 +7,12 @@ import userRouter from './routes/userRoute.js'
 import productRoute from './routes/productRoute.js'
 import cartRoute from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 //App Config
 const app = express()
 const port = process.env.PORT || 8386
 connectDB()
 connectCloudinary()
-
-// Cấu hình để phục vụ tệp tĩnh từ thư mục 'uploads'
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //middlewares
 app.use(express.json())
