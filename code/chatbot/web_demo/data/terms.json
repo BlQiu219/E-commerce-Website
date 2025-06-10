@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Chính sách đổi/trả",
+    "content": "Khách hàng có thể đổi/trả sản phẩm trong vòng 7 ngày kể từ ngày nhận hàng nếu sản phẩm bị lỗi kỹ thuật, hư hỏng trong quá trình vận chuyển hoặc giao nhầm. Sản phẩm cần còn nguyên tem niêm phong, chưa qua sử dụng và kèm theo hóa đơn mua hàng. Không áp dụng đổi/trả nếu sản phẩm đã mở nắp hoặc sử dụng qua."
+  },
+  {
+    "id": 2,
+    "title": "Chính sách bảo hành",
+    "content": "Mỹ phẩm là sản phẩm tiêu dùng cá nhân, không áp dụng bảo hành như các sản phẩm điện tử. Tuy nhiên, chúng tôi cam kết hỗ trợ khách hàng trong các trường hợp sản phẩm lỗi do nhà sản xuất hoặc giao sai hàng."
+  },
+  {
+    "id": 3,
+    "title": "Chính sách vận chuyển",
+    "content": "Chúng tôi giao hàng toàn quốc với thời gian dự kiến từ 2-5 ngày làm việc. Miễn phí vận chuyển cho đơn hàng có giá trị từ 500.000 VNĐ trở lên. Đơn hàng dưới 500.000 VNĐ sẽ được tính phí theo biểu phí vận chuyển từng khu vực."
+  },
+  {
+    "id": 4,
+    "title": "Chính sách hoàn tiền",
+    "content": "Trong trường hợp sản phẩm bị lỗi, hư hỏng hoặc không đúng mô tả, khách hàng có thể yêu cầu hoàn tiền. Yêu cầu sẽ được xác minh trong vòng 3 ngày và hoàn tiền trong 5-7 ngày làm việc thông qua phương thức thanh toán ban đầu hoặc tài khoản ngân hàng."
+  },
+  {
+    "id": 5,
+    "title": "Điều khoản sử dụng",
+    "content": "Khi truy cập và mua sắm tại website của chúng tôi, bạn đồng ý với các điều khoản và điều kiện sử dụng. Vui lòng đọc kỹ thông tin trước khi đặt hàng để tránh tranh chấp không đáng có."
+  },
+  {
+    "id": 6,
+    "title": "Chính sách bảo mật",
+    "content": "Chúng tôi cam kết bảo vệ thông tin cá nhân của khách hàng. Mọi dữ liệu sẽ được bảo mật và chỉ sử dụng để xử lý đơn hàng, chăm sóc khách hàng. Không chia sẻ với bên thứ ba nếu không có sự đồng ý từ khách hàng."
+  },
+  {
+    "id": 7,
+    "title": "Hướng dẫn thanh toán",
+    "content": "Website hỗ trợ nhiều phương thức thanh toán tiện lợi:chuyển khoản ngân hàng, ví điện tử (razopay, stripe) và thanh toán khi nhận hàng (COD)."
+  },
+  {
+    "id": 8,
+    "title": "Hỗ trợ khách hàng",
+    "content": "Đội ngũ tư vấn viên luôn sẵn sàng hỗ trợ bạn từ 8:00 - 22:00 hàng ngày qua hotline 0123 456 789 hoặc email: abc@hntcomestic.com.  Mọi phản hồi sẽ được xử lý trong vòng 24h làm việc."
+  }
+]

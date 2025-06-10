@@ -1,0 +1,18 @@
+{
+    "name": "HNT Comestic",
+    "address": "Km10, Nguyễn Trãi, Hà Đông, Hà Nội",
+    "open_hours": {
+        "Monday-Friday": "08:00 - 21:00",
+        "Saturday-Sunday": "09:00 - 22:00"
+    },
+    "description": "HNT Cosmetics mang đến cho bạn những dòng mỹ phẩm quốc tế cao cấp, giúp bạn tỏa sáng vẻ đẹp tự nhiên với sự tự tin và phong cách. Sản phẩm chính hãng, chất lượng vượt trội, được trao gửi bằng cả sự tận tâm.",
+    "contact": {
+        "phone": "0123 456 789",
+        "email": "abc@hntcomestic.com",
+        "website": "https://hntcomestic.vn",
+        "social_media": {
+            "facebook": "https://facebook.com/hntcomestic",
+            "instagram": "https://instagram.com/hntcomestic"
+        }
+    }
+}
