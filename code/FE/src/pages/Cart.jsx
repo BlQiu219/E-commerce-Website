@@ -33,7 +33,7 @@ const Cart = () => {
   return (
     <div className='border-t pt-14'>
       <div className='text-2xl mb-3'>
-        <Title text1={'YOUR'} text2={'CART'} />
+        <Title text1={'GIỎ HÀNG'} text2={'CỦA BẠN'} />
       </div>
 
       <div>
@@ -52,7 +52,7 @@ const Cart = () => {
                 <div>
                   <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
                   <div className='flex items-center gap-5 mt-2'>
-                    <p>{currency}{productData.price}</p>
+                    <p>{new Intl.NumberFormat('vi-VN').format(productData.price) + "đ"}</p>
                   </div>
                 </div>
               </div>
@@ -64,7 +64,7 @@ const Cart = () => {
                     updateQuantity(item._id, value);
                   }
                 }}
-                className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1'
+                className='border rounded-full w-12 sm:w-14 px-1 py-1 text-center'
                 type='number'
                 min={1}
                 defaultValue={item.quantity}
@@ -87,9 +87,9 @@ const Cart = () => {
           <div className='w-full text-end'>
             <button
               onClick={() => navigate('/place-order')}
-              className='bg-black text-white text-sm my-8 px-8 py-3'
+              className='bg-black text-white text-sm my-8 px-8 py-3 rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out'
             >
-              PROCEED TO CHECKOUT
+              TIẾN HÀNH THANH TOÁN
             </button>
           </div>
         </div>

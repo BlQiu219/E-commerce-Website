@@ -15,7 +15,7 @@ import SearchBar from './components/SearchBar'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify'
-
+import Chatbot from './pages/Chatbot'
 const App = () => {
   return (
     <div className='px4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
@@ -33,7 +33,7 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/product/:productId' element={<Product />} />
         <Route path='/verify' element={<Verify />} />
-
+        <Route path='/chatbot' element={<Chatbot />} />
       </Routes>
       <Footer />
     </div>

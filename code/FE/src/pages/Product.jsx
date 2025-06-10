@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import { useNavigate } from 'react-router-dom'; 
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, token, navigate } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [images, setImages] = useState('');
   const [quantity, setQuantity] = useState(1);  // Đặt số lượng mặc định là 1
@@ -34,9 +35,9 @@ const Product = () => {
 
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
-      {/** Product Data */}
+      {/* Product Data */}
       <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
-        {/** Product Image */}
+        {/* Product Image */}
         <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
           <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
             {
@@ -53,23 +54,14 @@ const Product = () => {
         {/* Product Information */}
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-          <div className='flex items-center gap-1 mt-2'>
-            <img src={assets.star_icon} alt='' className='w-3 5' />
-            <img src={assets.star_icon} alt='' className='w-3 5' />
-            <img src={assets.star_icon} alt='' className='w-3 5' />
-            <img src={assets.star_icon} alt='' className='w-3 5' />
-            <img src={assets.star_dull_icon} alt='' className='w-3 5' />
-            <p className='pl-2'>(122)</p>
-          </div>
-          <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
-          
-          {/* Đã di chuyển mô tả xuống dưới phần Description */}
+
+          <p className='mt-5 text-3xl font-medium'>
+            {new Intl.NumberFormat('vi-VN').format(productData.price)} {currency}
+          </p>
+
           <div className='flex items-center gap-4 mt-6'>
             {/* Ô số lượng */}
             <div className='flex items-center border rounded-lg overflow-hidden'>
-              {/* <label htmlFor='quantity' className='px-3 text-sm text-gray-600 bg-gray-100 border-r'>
-                Qty
-              </label> */}
               <input
                 type='number'
                 id='quantity'
@@ -82,38 +74,37 @@ const Product = () => {
 
             {/* Nút thêm vào giỏ */}
             <button 
-              onClick={() => addToCart(productData._id, productData.brand, quantity)} 
+              onClick={() => {
+                if (!token) {
+                  navigate('/login');
+                } else {
+                  addToCart(productData._id, productData.brand, quantity);
+                }
+              }}
               className='bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 active:bg-gray-700 text-sm transition-colors'>
-              ADD TO CART
+              THÊM VÀO GIỎ HÀNG
             </button>
           </div>
 
+          {/* Mô tả sản phẩm */}
+          <div className='mt-8 text-sm text-gray-700 leading-relaxed  p-4 rounded-lg'>
+            <b className='block mb-2 text-black'>Mô tả sản phẩm</b>
+            <p>{productData.description}</p>
+          </div>
 
-          <hr className='mt-8 sm:w-4/5' />
-          <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
-            <p>100 Origin product</p>
-            <p>Cash on delivery is available on this product</p>
-            <p>Easy return and exchange policy within 7 days</p>
+          {/* Chính sách */}
+          <div className='mt-8 text-sm text-gray-700 leading-relaxed  p-4 rounded-lg'>
+            <p>✅ 100% Sản phẩm chính hãng</p>
+            <p>🚚 Hỗ trợ thanh toán khi nhận hàng</p>
+            <p>🔄 Dễ dàng đổi/trả trong vòng 7 ngày</p>
           </div>
         </div>
       </div>
 
-      {/** Description and review Section */}
-      <div className='mt-20'>
-        <div className='flex'>
-          <b className='border px-5 py-3 text-sm'>Description</b>
-          <b className='border px-5 py-3 text-sm'> Review (122)</b>
-        </div>
-        <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-          <p>{productData.description}</p> {/* Mô tả sản phẩm sẽ được hiển thị ở đây */}
-        </div>
-      </div>
-
-      {/** Display related products */}
+      {/* Display related products */}
       <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
-
     </div>
   ) : <div className='opacity-0'></div>
 }
 
-export default Product
+export default Product;

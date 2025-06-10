@@ -36,10 +36,11 @@ const LatestCollection = () => {
       {/* Tiêu đề */}
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-5xl font-semibold text-gray-800">
-          LATEST COLLECTIONS_____
+          HÀNG MỚI VỀ____
         </h2>
         <p className="mt-4 text-gray-600 text-xs sm:text-sm md:text-base w-full sm:w-2/3 mx-auto leading-relaxed">
-          Discover the newest arrivals from top international beauty brands. Explore the latest in makeup, skincare, and fragrances curated just for you.
+          <p>Khám phá những sản phẩm mới nhất từ các thương hiệu làm đẹp hàng đầu thế giới.</p> 
+          <p>Từ trang điểm, chăm sóc da đến nước hoa – tất cả đều được tuyển chọn tinh tế dành riêng cho bạn. </p>
         </p>
       </div>
 

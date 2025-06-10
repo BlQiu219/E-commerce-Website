@@ -4,37 +4,42 @@ import { NavLink } from 'react-router-dom'
 
 const Hero = () => {
   return (
-    <div className="relative w-full flex justify-center">
-      {/* Ảnh nền */}
+    <div className="relative w-full">
+      {/* Ảnh nền full màn hình */}
       <img
-        className="w-full max-w-[1200px] h-auto object-cover"
-        src={assets.baner10}
-        alt="banner10"
+        className="w-full h-auto object-cover"
+        src={assets.banerrealfinal}
+        alt="bannerrealfinal"
       />
 
-      {/* Nội dung nằm trên ảnh */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center text-white bg-black bg-opacity-30 w-full max-w-[1200px] h-full">
+      {/* Overlay nội dung phủ ảnh */}
+      <div className="absolute inset-0 flex flex-col items-end justify-center text-black  pr-16 translate-x-[-2cm]">
         <div className="flex items-center justify-center gap-2 mb-2 mt-8">
-          <p className="w-8 md:w-11 h-[2px] bg-white"></p>
+          <p className="w-8 md:w-11 h-[2px] bg-black"></p>
           <p className="font-bold text-sm md:text-base">
-            DISCOVER YOUR NEW ADDICTION
+            KHÁM PHÁ NIỀM ĐAM MÊ CỦA BẠN 
           </p>
-          <p className="w-8 md:w-11 h-[2px] bg-white"></p>
+          <p className="w-8 md:w-11 h-[2px] bg-black"></p>
         </div>
 
-        <h1 className="font-bold prata-regular text-3xl sm:py-3 lg:text-5xl leading-relaxed text-center">
-          Mineral Based Makeup Products
-        </h1>
+        <div className="text-right leading-snug">
+          <h1 className="font-bold prata-regular text-4xl lg:text-6xl text-black">
+            MỸ PHẨM TỪ
+          </h1>
+          <h2 className="font-semibold prata-regular text-3xl lg:text-5xl text-black mt-2">
+            THIÊN NHIÊN
+          </h2>
+        </div>
 
         <NavLink
           to="/collection"
-          className="inline-block mt-4 px-6 py-2 border border-white text-sm font-medium tracking-wide transition duration-300 text-white hover:bg-white hover:text-black"
+          className="inline-block mt-4 px-6 py-2 border border-black text-sm font-medium tracking-wide transition duration-300 text-black hover:bg-black hover:text-white translate-x-[-3.5cm]"
+          style={{ marginLeft: '4cm' }}
         >
-          SHOP NOW &gt;
+          KHÁM PHÁ &gt;
         </NavLink>
       </div>
     </div>
-  )
-}
-
-export default Hero
+  );
+};
+export default Hero;

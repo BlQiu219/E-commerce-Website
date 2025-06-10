@@ -75,9 +75,12 @@ import contact_img from './contact_img.png'
 import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './stripe_logo.png'
 import cross_icon from './cross_icon.png'
-import baner10 from './baner10.jpg'
+import banerreal from './banerreal.jpg'
 import aboutus from './aboutus.jpg'
 import logohnt from './logohnt.jpg'
+import aboutuss from './aboutuss.jpg'
+import contact from './contact.png'
+import banerrealfinal from './banerrealfinal.jpg' 
 
 export const assets = {
     logo,
@@ -100,9 +103,11 @@ export const assets = {
     stripe_logo,
     cross_icon,
     i_img_dowload,
-    baner10,
-    aboutus,
-    logohnt
+    aboutuss,
+    logohnt,
+    contact,
+    banerreal,
+    banerrealfinal
 }
 
 export const products = [

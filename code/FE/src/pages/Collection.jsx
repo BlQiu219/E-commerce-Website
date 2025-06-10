@@ -140,40 +140,40 @@ const Collection = () => {
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
       {/** Filter Options */}
       <div className='min-w-60'>
-        <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS
+        <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>LỌC SẢN PHẨM
           <img className={`h-3 sm:hidden ${showFilter ? 'rotate-90' : ''}`} src={assets.dropdown_icon} alt='' />
         </p>
         {/* Category Filter */}
         <div
-          className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'
+          className={`border-b border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'
             } sm:block`}
         >
-          <p className='mb-3 text-sm font-medium'>PRODUCT CATEGORIES</p>
+          <p className='mb-3 text-sm font-medium'>DANH MỤC SẢN PHẨM</p>
           <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
             <p className='flex gap-2'>
-              <input className='w-3' type='checkbox' value={'Lifstick'} onChange={toggleCategory} />Lipstick
+              <input className='w-3' type='checkbox' value={'Lifstick'} onChange={toggleCategory} />Son môi
             </p>
 
             <p className='flex gap-2'>
-              <input className='w-3' type='checkbox' value={'Perfume'} onChange={toggleCategory} />Perfume
+              <input className='w-3' type='checkbox' value={'Perfume'} onChange={toggleCategory} />Nước hoa
             </p>
 
             <p className='flex gap-2'>
-              <input className='w-3' type='checkbox' value={'Makeup'} onChange={toggleCategory} />Makeup
+              <input className='w-3' type='checkbox' value={'Makeup'} onChange={toggleCategory} />Đồ trang điểm
             </p>
 
             <p className='flex gap-2'>
-              <input className='w-3' type='checkbox' value={'Skincare - Haircare'} onChange={toggleCategory} />Skincare - Haircare
+              <input className='w-3' type='checkbox' value={'Skincare - Haircare'} onChange={toggleCategory} />Chăm sóc da - tóc
             </p>
           </div>
         </div>
 
         {/* Brand Filter */}
         <div
-          className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'
+          className={`border-b border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'
             } sm:block`}
         >
-          <p className='mb-3 text-sm font-medium'>BRAND</p>
+          <p className='mb-3 text-sm font-medium'>DANH MỤC THƯƠNG HIỆU</p>
           <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
             {[
               'Dior',
@@ -199,10 +199,10 @@ const Collection = () => {
 
         {/* Price Range Filter */}
         <div
-          className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'
+          className={`border-b border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'
             } sm:block`}
         >
-          <p className='mb-3 text-sm font-medium'>PRICE RANGE</p>
+          <p className='mb-3 text-sm font-medium'>GIÁ TIỀN</p>
           <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
             {[
               'Under 5 USD',
@@ -230,12 +230,12 @@ const Collection = () => {
       {/* Right Side */}
       <div className='flex-1'>
         <div className='flex justify-between text-base sm:text-2xl mb-4 relative'>
-          <Title text1={'ALL'} text2={'COLLECTIONS'} />
+          <Title text1={'TẤT CẢ'} text2={'SẢN PHẨM'} />
           {/* Product Sort*/}
           <select onChange={(e) => setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2'>
-            <option value='relavent'>Sort by: Relavent</option>
-            <option value='high-low'>Sort by: High to Low</option>
-            <option value='low-high'>Sort by: Low to High</option>
+            <option value='relavent'>Sắp xếp : Liên quan</option>
+            <option value='high-low'>Sắp xếp : Cao đến thấp</option>
+            <option value='low-high'>Sắp xếp : Thấp đến cao</option>
           </select>
         </div>
 
@@ -261,7 +261,7 @@ const Collection = () => {
             className="px-3 py-1 border rounded hover:bg-gray-100 transition disabled:opacity-50"
             disabled={currentPage === 1}
           >
-            Previous
+            Trang trước 
           </button>
 
           {/* Page numbers */}
@@ -285,7 +285,7 @@ const Collection = () => {
             className="px-3 py-1 border rounded hover:bg-gray-100 transition disabled:opacity-50"
             disabled={currentPage === totalPages}
           >
-            Next
+            Trang sau 
           </button>
         </div>
 

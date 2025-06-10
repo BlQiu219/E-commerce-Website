@@ -20,7 +20,7 @@ const ProductItem = ({ id, images, name, price }) => {
         </div>
         <div className='flex flex-col justify-between flex-1 mt-3'>
           <p className='text-sm font-medium min-h-[40px]'>{name}</p>
-          <p className='text-sm font-semibold'>{currency}{price}</p>
+          <p className='text-sm font-semibold'>{Number(price).toLocaleString('vi-VN')}đ</p>
         </div>
       </Link>
     </div>
