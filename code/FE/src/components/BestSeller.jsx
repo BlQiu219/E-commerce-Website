@@ -31,14 +31,13 @@ const BestSeller = () => {
 
   return (
     <div className="my-16 relative">
-      {/* Tiêu đề */}
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-5xl font-semibold text-gray-800">
-          _____BEST SELLERS
+          _____SẢN PHẨM BÁN CHẠY
         </h2>
         <p className="mt-4 text-gray-500 text-xs sm:text-sm md:text-base w-full sm:w-2/3 mx-auto leading-relaxed">
-          Discover our most loved beauty essentials, handpicked by our customers worldwide.
-          Bring home the best in skincare, makeup, and fragrance.
+          <p>Khám phá bộ sưu tập những sản phẩm làm đẹp thiết yếu được yêu thích hàng đầu Việt Nam</p>
+          <p>Lựa chọn tinh tế từ hàng triệu khách hàng trên khắp thế giới.</p>
         </p>
       </div>
 
