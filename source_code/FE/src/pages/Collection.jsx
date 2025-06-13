@@ -42,7 +42,7 @@ const Collection = () => {
       setPriceRange(prev => [...prev, value]);
     }
   };
-  
+
 
   const applyFilter = () => {
     setCurrentPage(1);
@@ -65,18 +65,18 @@ const Collection = () => {
       productsCopy = productsCopy.filter(item => {
         return priceRange.some(range => {
           const price = item.price;
-          if (range === 'Under 5 USD') return price < 5;
-          if (range === '5 USD - 30 USD') return price >= 5 && price < 30;
-          if (range === '30 USD - 70 USD') return price >= 30 && price < 70;
-          if (range === '70 USD - 100 USD') return price >= 70 && price < 100;
-          if (range === '100 USD - 150 USD') return price >= 100 && price < 150;
-          if (range === '150 USD - 200 USD') return price >= 150 && price < 200;
-          if (range === 'Above 200 USD') return price > 200;
+          if (range === 'Dưới 100.000đ') return price < 100000;
+          if (range === '100.000đ - 500.000đ') return price >= 100000 && price < 500000;
+          if (range === '500.000đ - 1.000.000đ') return price >= 500000 && price < 1000000;
+          if (range === '1.000.000đ - 2.000.000đ') return price >= 1000000 && price < 2000000;
+          if (range === '2.000.000đ - 3.000.000đ') return price >= 2000000 && price < 3000000;
+          if (range === '3.000.000đ - 5.000.000đ') return price >= 3000000 && price < 5000000;
+          if (range === 'Trên 5.000.000đ') return price > 5000000;
           return true;
         });
       });
     }
-    
+
 
     setFilterProducts(productsCopy)
     // setCurrentPage(1);
@@ -102,11 +102,11 @@ const Collection = () => {
   useEffect(() => {
     applyFilter()
   }, [category, brand, priceRange, search, showSearch, products])
-  
-  
-//   useEffect(() => {
-//   console.log("🔍 Danh sách sản phẩm:", products);
-// }, [products]);
+
+
+  //   useEffect(() => {
+  //   console.log("🔍 Danh sách sản phẩm:", products);
+  // }, [products]);
 
 
   useEffect(() => {
@@ -129,7 +129,7 @@ const Collection = () => {
   if (endPage > totalPages) {
     endPage = totalPages;
     startPage = Math.max(endPage - visiblePageCount + 1, 1);
-  }  
+  }
 
   const pageNumbers = [];
   for (let i = startPage; i <= endPage; i++) {
@@ -151,7 +151,7 @@ const Collection = () => {
           <p className='mb-3 text-sm font-medium'>DANH MỤC SẢN PHẨM</p>
           <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
             <p className='flex gap-2'>
-              <input className='w-3' type='checkbox' value={'Lifstick'} onChange={toggleCategory} />Son môi
+              <input className='w-3' type='checkbox' value={'Lipstick'} onChange={toggleCategory} />Son môi
             </p>
 
             <p className='flex gap-2'>
@@ -205,13 +205,13 @@ const Collection = () => {
           <p className='mb-3 text-sm font-medium'>GIÁ TIỀN</p>
           <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
             {[
-              'Under 5 USD',
-              '5 USD - 30 USD',
-              '30 USD - 70 USD',
-              '70 USD - 100 USD',
-              '100 USD - 150 USD',
-              '150 USD - 200 USD',
-              'Above 200 USD',
+              'Dưới 100.000đ',
+              '100.000đ - 500.000đ',
+              '500.000đ - 1.000.000đ',
+              '1.000.000đ - 2.000.000đ',
+              '2.000.000đ - 3.000.000đ',
+              '3.000.000đ - 5.000.000đ',
+              'Trên 5.000.000đ',
             ].map((range, index) => (
               <p key={index} className='flex gap-2'>
                 <input
@@ -253,7 +253,7 @@ const Collection = () => {
           ))}
         </div>
 
-          
+
         <div className="flex justify-center items-center mt-8 space-x-2 text-sm">
           {/* Previous button */}
           <button
@@ -261,7 +261,7 @@ const Collection = () => {
             className="px-3 py-1 border rounded hover:bg-gray-100 transition disabled:opacity-50"
             disabled={currentPage === 1}
           >
-            Trang trước 
+            Trang trước
           </button>
 
           {/* Page numbers */}
@@ -269,7 +269,7 @@ const Collection = () => {
             <button
               key={number}
               onClick={() => setCurrentPage(number)}
-              className={`px-3 py-1 border rounded transition ${currentPage === number ? 'bg-black text-white': 'hover:bg-gray-100'}`}
+              className={`px-3 py-1 border rounded transition ${currentPage === number ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
             >
               {number}
             </button>
@@ -285,7 +285,7 @@ const Collection = () => {
             className="px-3 py-1 border rounded hover:bg-gray-100 transition disabled:opacity-50"
             disabled={currentPage === totalPages}
           >
-            Trang sau 
+            Trang sau
           </button>
         </div>
 

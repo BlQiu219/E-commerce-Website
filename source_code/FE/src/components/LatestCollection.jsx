@@ -15,7 +15,7 @@ const LatestCollection = () => {
 
   useEffect(() => {
     if (products.length > 0) {
-      const lipstick = products.filter(p => p.category === 'Lifstick');
+      const lipstick = products.filter(p => p.category === 'Lipstick');
       const perfume = products.filter(p => p.category === 'Perfume');
       const makeup = products.filter(p => p.category === 'Makeup');
       const skincareHaircare = products.filter(p => p.category === 'Skincare - Haircare');
@@ -39,7 +39,7 @@ const LatestCollection = () => {
           HÀNG MỚI VỀ____
         </h2>
         <p className="mt-4 text-gray-600 text-xs sm:text-sm md:text-base w-full sm:w-2/3 mx-auto leading-relaxed">
-          <p>Khám phá những sản phẩm mới nhất từ các thương hiệu làm đẹp hàng đầu thế giới.</p> 
+          <p>Khám phá những sản phẩm mới nhất từ các thương hiệu làm đẹp hàng đầu thế giới.</p>
           <p>Từ trang điểm, chăm sóc da đến nước hoa – tất cả đều được tuyển chọn tinh tế dành riêng cho bạn. </p>
         </p>
       </div>
@@ -47,12 +47,12 @@ const LatestCollection = () => {
       {/* Hiển thị sản phẩm */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-2 gap-x-4">
         {latestProducts.map((item) => (
-          <ProductItem 
-            key={item._id} 
-            id={item._id} 
-            images={item.images} 
-            name={item.name} 
-            price={item.price} 
+          <ProductItem
+            key={item._id}
+            id={item._id}
+            images={item.images}
+            name={item.name}
+            price={item.price}
           />
         ))}
       </div>
