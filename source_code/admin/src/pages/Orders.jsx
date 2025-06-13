@@ -166,7 +166,7 @@ const Orders = ({ token }) => {
               </p>
             )}
             <div className="flex gap-2 mt-4">
-              {modalOrder.returnRequest.status === "pending" && (
+              {modalOrder.returnRequest.status === "Chưa giải quyết" && (
                 <>
                   {/* Nếu đơn chưa thanh toán chỉ cho phép duyệt */}
                   {modalOrder.payment === false ? (
@@ -180,7 +180,7 @@ const Orders = ({ token }) => {
                           backendUrl + "/api/order/process-return",
                           {
                             orderId: modalOrder._id,
-                            status: "approved",
+                            status: "Đã chấp thuận",
                             adminNote,
                           },
                           { headers: { token } }
@@ -205,7 +205,7 @@ const Orders = ({ token }) => {
                             backendUrl + "/api/order/process-return",
                             {
                               orderId: modalOrder._id,
-                              status: "approved",
+                              status: "Đã chấp thuận",
                               adminNote,
                             },
                             { headers: { token } }
@@ -231,7 +231,7 @@ const Orders = ({ token }) => {
                             backendUrl + "/api/order/process-return",
                             {
                               orderId: modalOrder._id,
-                              status: "rejected",
+                              status: "Đã từ chối",
                               adminNote,
                             },
                             { headers: { token } }
@@ -277,8 +277,8 @@ const Orders = ({ token }) => {
           <button
             onClick={() => setShowReturnOnly((v) => !v)}
             className={`px-4 py-2 rounded ${showReturnOnly
-                ? "bg-yellow-500 text-white"
-                : "bg-gray-200 text-gray-700"
+              ? "bg-yellow-500 text-white"
+              : "bg-gray-200 text-gray-700"
               } font-semibold`}
           >
             {showReturnOnly ? "Xem tất cả đơn" : "Chỉ xem đơn đổi trả"}
@@ -387,7 +387,7 @@ const Orders = ({ token }) => {
                     </p>
                   )}
                   {/* Nếu trạng thái là pending, cho phép admin xử lý */}
-                  {order.returnRequest.status === "pending" && (
+                  {order.returnRequest.status === "Chưa giải quyết" && (
                     <div className="mt-2 flex flex-col gap-1">
                       <button
                         className="px-2 py-1 bg-green-500 text-white rounded text-xs"
@@ -399,7 +399,7 @@ const Orders = ({ token }) => {
                             backendUrl + "/api/order/process-return",
                             {
                               orderId: order._id,
-                              status: "approved",
+                              status: "Đã chấp thuận",
                               adminNote,
                             },
                             { headers: { token } }
@@ -422,7 +422,7 @@ const Orders = ({ token }) => {
                             backendUrl + "/api/order/process-return",
                             {
                               orderId: order._id,
-                              status: "rejected",
+                              status: "Đã từ chối",
                               adminNote,
                             },
                             { headers: { token } }
@@ -447,7 +447,7 @@ const Orders = ({ token }) => {
                             backendUrl + "/api/order/process-return",
                             {
                               orderId: order._id,
-                              status: "refunded",
+                              status: "Đã hoàn tiền",
                               adminNote,
                             },
                             { headers: { token } }

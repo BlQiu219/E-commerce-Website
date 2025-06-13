@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
     returnRequest: {
         requested: { type: Boolean, default: false },
         reason: String,
-        status: { type: String, enum: ["pending", "approved", "rejected"] },
+        status: { type: String, enum: ["Chưa giải quyết", "Đã chấp thuận", "Đã từ chối"] },
         requestDate: Date,
         processDate: Date,
         adminNote: String,

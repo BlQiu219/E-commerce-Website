@@ -366,7 +366,7 @@ const requestReturnOrder = async (req, res) => {
         order.returnRequest = {
             requested: true,
             reason,
-            status: "pending",
+            status: "Chưa giải quyết",
             requestDate: new Date(),
         };
         await order.save();
@@ -396,7 +396,7 @@ const processReturnOrder = async (req, res) => {
         order.returnRequest.status = status;
         order.returnRequest.adminNote = adminNote;
         order.returnRequest.processDate = new Date();
-        if (status === "approved" && order.payment === true) {
+        if (status === "Đã chấp thuận" && order.payment === true) {
             order.refunded = true;
         }
         await order.save();
