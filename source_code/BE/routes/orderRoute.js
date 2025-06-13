@@ -1,8 +1,7 @@
 import express from 'express'
-import { placeOrder, placeOrderStripe, placeOrderVnpay, vnpayReturn, allOrder, userOrders, updateStatus, verifyStripe, totalRevenue, revenueByDay, revenueByMonth, revenueByProduct, requestReturnOrder, processReturnOrder, getReturnOrders } from '../controllers/orderController.js'
+import { placeOrder, placeOrderStripe, placeOrderVnpay, vnpayReturn, allOrder, userOrders, updateStatus, verifyStripe, totalRevenue, revenueByDay, revenueByMonth, revenueByProduct, requestReturnOrder, processReturnOrder, getReturnOrders, deleteOrder } from '../controllers/orderController.js'
 import adminAuth from '../middleware/adminAuth.js'
 import authUser from '../middleware/auth.js'
-
 
 const orderRouter = express.Router();
 
@@ -31,6 +30,8 @@ orderRouter.get('/revenue-by-product', adminAuth, revenueByProduct);
 orderRouter.post("/return-request", authUser, requestReturnOrder); // user gửi yêu cầu
 orderRouter.post("/process-return", adminAuth, processReturnOrder); // admin xử lý
 orderRouter.get("/return-orders", adminAuth, getReturnOrders); // admin lấy danh sách
+
+orderRouter.post('/delete', adminAuth, deleteOrder); // route xóa đơn hàng
 
 export default orderRouter;
 // 12"35

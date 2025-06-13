@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import moment from 'moment';
 import crypto from 'crypto';
 import querystring from 'qs';
+import productModel from "../models/productModel.js";
 
 // global variables
 const currency = 'inr'; // Lưu ý: VNPAY chỉ hỗ trợ VND
@@ -16,6 +17,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const placeOrder = async (req, res) => {
     try {
         const { userId, items, amount, address } = req.body;
+
+        // Copy ảnh từ sản phẩm sang từng item
+        for (let item of items) {
+            const product = await productModel.findById(item.productId);
+            item.images = product?.images || [];
+        }
 
         const orderData = {
             userId,
@@ -45,6 +52,11 @@ const placeOrderStripe = async (req, res) => {
     try {
         const { userId, items, amount, address } = req.body;
         const { origin } = req.body;
+
+        for (let item of items) {
+        const product = await productModel.findById(item.productId);
+        item.images = product?.images || [];
+}
 
         const orderData = {
             userId,
@@ -99,6 +111,11 @@ const placeOrderStripe = async (req, res) => {
 // Verify Stripe
 const verifyStripe = async (req, res) => {
     const { orderId, success, userId } = req.body;
+
+    for (let item of items) {
+    const product = await productModel.findById(item.productId);
+    item.images = product?.images || [];
+    }
 
     try {
         if (success === "true") {
@@ -409,6 +426,18 @@ const processReturnOrder = async (req, res) => {
     }
 };
 
+const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    const order = await orderModel.findByIdAndDelete(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+    res.json({ success: true, message: "Order deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export {
     verifyStripe, placeOrder, placeOrderStripe, placeOrderVnpay, vnpayReturn, allOrder, userOrders, updateStatus,
@@ -419,4 +448,5 @@ export {
     requestReturnOrder,
     getReturnOrders,
     processReturnOrder,
+    deleteOrder
 };
