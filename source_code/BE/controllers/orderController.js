@@ -348,6 +348,66 @@ const revenueByProduct = async (req, res) => {
     }
 };
 
+// User gửi yêu cầu đổi trả/hoàn tiền
+const requestReturnOrder = async (req, res) => {
+    try {
+        const { orderId, reason } = req.body;
+        const order = await orderModel.findById(orderId);
+        if (!order)
+            return res
+                .status(404)
+                .json({ success: false, message: "Không tìm thấy đơn hàng" });
+        if (order.returnRequest && order.returnRequest.requested) {
+            return res.status(400).json({
+                success: false,
+                message: "Đơn hàng đã gửi yêu cầu đổi trả trước đó",
+            });
+        }
+        order.returnRequest = {
+            requested: true,
+            reason,
+            status: "pending",
+            requestDate: new Date(),
+        };
+        await order.save();
+        res.json({ success: true, message: "Đã gửi yêu cầu đổi trả/hoàn tiền" });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+const getReturnOrders = async (req, res) => {
+    try {
+        const orders = await orderModel.find({ "returnRequest.requested": true });
+        res.json({ success: true, orders });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+const processReturnOrder = async (req, res) => {
+    try {
+        const { orderId, status, adminNote } = req.body;
+        const order = await orderModel.findById(orderId);
+        if (!order || !order.returnRequest || !order.returnRequest.requested) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Không tìm thấy yêu cầu đổi trả" });
+        }
+        order.returnRequest.status = status;
+        order.returnRequest.adminNote = adminNote;
+        order.returnRequest.processDate = new Date();
+        if (status === "approved" && order.payment === true) {
+            order.refunded = true;
+        }
+        await order.save();
+        res.json({
+            success: true,
+            message: `Đã cập nhật trạng thái đổi trả: ${status}`,
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
 
 
 export {
@@ -356,4 +416,7 @@ export {
     revenueByDay,
     revenueByMonth,
     revenueByProduct,
+    requestReturnOrder,
+    getReturnOrders,
+    processReturnOrder,
 };

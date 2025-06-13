@@ -4,15 +4,12 @@ import axios from "axios";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
+import Modal from "react-modal";
 
 const Orders = ({ token }) => {
   const [orders, setOrders] = useState([]);
-  // Bổ sung state cho search/filter/sort/pagination
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [sortType, setSortType] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 10;
+  const [showReturnOnly, setShowReturnOnly] = useState(false);
+  const [modalOrder, setModalOrder] = useState(null);
 
   const fetchAllOrders = async () => {
     if (!token) {
@@ -37,13 +34,46 @@ const Orders = ({ token }) => {
     }
   };
 
+  const deleteAllOrders = async () => {
+    if (!token) {
+      toast.error("Please login first");
+      return;
+    }
+
+    try {
+      console.log("Deleting all orders...");
+      const response = await axios.post(
+        backendUrl + "/api/order/delete-all",
+        {},
+        {
+          headers: {
+            token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Delete response:", response.data);
+
+      if (response.data.success) {
+        toast.success("All orders have been deleted");
+        setOrders([]);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting orders:", error);
+      toast.error(error.message);
+    }
+  };
+
   // const statusHandler = async (event, orderId) => {
   //   try {
   //     const response = await axios.post(backendUrl+"/api/order/status", {orderId, status:event.target.value}, {headers:{token}})
   //     if (response.data.success) {
   //       await fetchAllOrders();
   //     }
-     
+
   //   } catch (error) {
   //     console.log(error);
   //     toast.error(error.message);
@@ -57,7 +87,7 @@ const Orders = ({ token }) => {
         { orderId, status: event.target.value },
         { headers: { token } }
       );
-  
+
       if (response.data.success) {
         await fetchAllOrders();
         console.log("Status updated successfully:", response.data);
@@ -71,121 +101,255 @@ const Orders = ({ token }) => {
     }
   };
 
+  const deleteSingleOrder = async (e, orderId) => {
+    e.stopPropagation(); // Ngăn sự kiện click lan truyền lên phần tử cha
+    if (!token) {
+      toast.error("Vui lòng đăng nhập trước");
+      return;
+    }
+    if (window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) {
+      try {
+        const response = await axios.post(
+          backendUrl + "/api/order/delete",
+          { orderId },
+          { headers: { token } }
+        );
+
+        if (response.data.success) {
+          toast.success(response.data.message || "Đơn hàng đã được xóa.");
+          fetchAllOrders();
+        } else {
+          toast.error(response.data.message || "Không thể xóa đơn hàng.");
+        }
+      } catch (error) {
+        console.error("Error deleting order:", error);
+        toast.error("Lỗi khi xóa đơn hàng.");
+      }
+    }
+  };
+
+  // Đếm số lượng yêu cầu đổi trả/hoàn tiền đang chờ xử lý
+  const pendingReturnCount = orders.filter(
+    (order) => order.returnRequest && order.returnRequest.requested // Đếm tất cả các yêu cầu đã được gửi, bất kể trạng thái
+  ).length;
+
   useEffect(() => {
     fetchAllOrders();
   }, [token]);
 
-  // Search nâng cao + filter
-  let filteredOrders = orders.filter(order => {
-    // Tìm theo tên, địa chỉ, sđt, trạng thái, id
-    const address = order.address || {};
-    const searchStr = [
-      order._id,
-      order.status,
-      address.firstName,
-      address.lastName,
-      address.street,
-      address.city,
-      address.state,
-      address.country,
-      address.zipcode,
-      address.phone,
-      order.paymentMethod,
-      order.payment ? 'Done' : 'Pending'
-    ].join(' ').toLowerCase();
-
-    const matchSearch = searchStr.includes(searchTerm.toLowerCase());
-    const matchStatus = statusFilter ? order.status === statusFilter : true;
-    return matchSearch && matchStatus;
-  });
-
-  // Sort
-  if (sortType === 'date-desc') {
-    filteredOrders = filteredOrders.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-  } else if (sortType === 'date-asc') {
-    filteredOrders = filteredOrders.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
-  } else if (sortType === 'amount-desc') {
-    filteredOrders = filteredOrders.slice().sort((a, b) => b.amount - a.amount);
-  } else if (sortType === 'amount-asc') {
-    filteredOrders = filteredOrders.slice().sort((a, b) => a.amount - b.amount);
-  }
-
-  // Pagination
-  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-  const paginatedOrders = filteredOrders.slice(
-    (currentPage - 1) * ordersPerPage,
-    currentPage * ordersPerPage
-  );
-
-  // Reset page về 1 khi search/filter/sort thay đổi
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, statusFilter, sortType]);
-
   return (
     <div>
-      <h3 className="text-xl font-bold mb-2">Quản lý đơn hàng</h3>
-      {/* Search, Filter, Sort */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        <input
-          type="text"
-          placeholder="Tìm kiếm theo tên, địa chỉ, SĐT, trạng thái..."
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <select
-          value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="">Tất cả trạng thái</option>
-          <option value="Đã đặt hàng">Đã đặt hàng</option>
-          <option value="Đang đóng gói">Đang đóng gói</option>
-          <option value="Đã gửi hàng">Đã gửi hàng</option>
-          <option value="Đang giao hàng">Đang giao hàng</option>
-          <option value="Đã giao">Đã giao</option>
-        </select>
-        <select
-          value={sortType}
-          onChange={e => setSortType(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="">Sắp xếp</option>
-          <option value="date-desc">Mới nhất</option>
-          <option value="date-asc">Cũ nhất</option>
-          <option value="amount-desc">Tổng tiền ↓</option>
-          <option value="amount-asc">Tổng tiền ↑</option>
-        </select>
+      <Modal
+        isOpen={!!modalOrder}
+        onRequestClose={() => setModalOrder(null)}
+        ariaHideApp={false}
+        style={{ content: { maxWidth: 500, margin: "auto", borderRadius: 8 } }}
+      >
+        {modalOrder && (
+          <div>
+            <h2 className="text-lg font-bold mb-2">
+              Chi tiết đổi trả/hoàn tiền
+            </h2>
+            <p>
+              <b>Khách hàng:</b> {modalOrder.address.firstName}{" "}
+              {modalOrder.address.lastName}
+            </p>
+            <p>
+              <b>Lý do:</b> {modalOrder.returnRequest.reason}
+            </p>
+            <p>
+              <b>Trạng thái:</b> {modalOrder.returnRequest.status}
+            </p>
+            {modalOrder.returnRequest.adminNote && (
+              <p>
+                <b>Ghi chú admin:</b> {modalOrder.returnRequest.adminNote}
+              </p>
+            )}
+            <div className="flex gap-2 mt-4">
+              {modalOrder.returnRequest.status === "pending" && (
+                <>
+                  {/* Nếu đơn chưa thanh toán chỉ cho phép duyệt */}
+                  {modalOrder.payment === false ? (
+                    <button
+                      className="px-3 py-1 bg-green-500 text-white rounded text-xs"
+                      onClick={async () => {
+                        const adminNote = prompt(
+                          "Ghi chú khi duyệt đổi trả/hoàn tiền:"
+                        );
+                        await axios.post(
+                          backendUrl + "/api/order/process-return",
+                          {
+                            orderId: modalOrder._id,
+                            status: "approved",
+                            adminNote,
+                          },
+                          { headers: { token } }
+                        );
+                        localStorage.setItem("revenueNeedsUpdate", Date.now());
+                        toast.success("Đã duyệt yêu cầu đổi trả/hoàn tiền!");
+                        setModalOrder(null);
+                        fetchAllOrders();
+                      }}
+                    >
+                      Duyệt yêu cầu
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        className="px-3 py-1 bg-green-500 text-white rounded text-xs"
+                        onClick={async () => {
+                          const adminNote = prompt(
+                            "Ghi chú khi duyệt đổi trả/hoàn tiền:"
+                          );
+                          await axios.post(
+                            backendUrl + "/api/order/process-return",
+                            {
+                              orderId: modalOrder._id,
+                              status: "approved",
+                              adminNote,
+                            },
+                            { headers: { token } }
+                          );
+                          localStorage.setItem(
+                            "revenueNeedsUpdate",
+                            Date.now()
+                          );
+                          toast.success(
+                            "Đã duyệt yêu cầu đổi trả/hoàn tiền! Doanh thu đã được cập nhật."
+                          );
+                          setModalOrder(null);
+                          fetchAllOrders();
+                        }}
+                      >
+                        Duyệt yêu cầu
+                      </button>
+                      <button
+                        className="px-3 py-1 bg-red-500 text-white rounded text-xs"
+                        onClick={async () => {
+                          const adminNote = prompt("Lý do từ chối:");
+                          await axios.post(
+                            backendUrl + "/api/order/process-return",
+                            {
+                              orderId: modalOrder._id,
+                              status: "rejected",
+                              adminNote,
+                            },
+                            { headers: { token } }
+                          );
+                          localStorage.setItem(
+                            "revenueNeedsUpdate",
+                            Date.now()
+                          );
+                          toast.success(
+                            "Đã từ chối yêu cầu đổi trả/hoàn tiền!"
+                          );
+                          setModalOrder(null);
+                          fetchAllOrders();
+                        }}
+                      >
+                        Từ chối yêu cầu
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="px-3 py-1 bg-gray-300 rounded text-xs"
+                    onClick={() => setModalOrder(null)}
+                  >
+                    Đóng
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </Modal>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-4">
+          <h3 className="text-xl font-bold">Trang Đơn Hàng</h3>
+          {/* Badge số lượng yêu cầu đổi trả */}
+          {pendingReturnCount > 0 && (
+            <span className="bg-yellow-400 text-white px-2 py-1 rounded text-xs font-semibold">
+              {pendingReturnCount} yêu cầu đổi trả/hoàn tiền mới
+            </span>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowReturnOnly((v) => !v)}
+            className={`px-4 py-2 rounded ${showReturnOnly
+                ? "bg-yellow-500 text-white"
+                : "bg-gray-200 text-gray-700"
+              } font-semibold`}
+          >
+            {showReturnOnly ? "Xem tất cả đơn" : "Chỉ xem đơn đổi trả"}
+          </button>
+          <button
+            onClick={deleteAllOrders}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Xóa Tất Cả Đơn Hàng
+          </button>
+        </div>
       </div>
       <div>
-        {paginatedOrders.length === 0 && (
-          <div className="text-gray-500 italic mb-4">Không tìm thấy đơn hàng.</div>
-        )}
-        {paginatedOrders.map((order, index) => (
-          <div className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 border-gray-200 p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-700" key={index}>
-            <img className="s-12" src={assets.parcel_icon} alt="" />
-            <div>
+        {/* Header row */}
+        <div className="hidden lg:grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-center border-b-2 border-gray-300 px-5 py-2 font-semibold bg-gray-100 text-gray-700 text-xs sm:text-sm mb-2">
+          <div>Sản phẩm</div>
+          <div>Thông tin giao hàng</div>
+          <div>Thông tin đơn hàng</div>
+          <div>Tổng tiền</div>
+          <div>Trạng thái</div>
+        </div>
+        {(showReturnOnly
+          ? orders.filter(
+            (order) => order.returnRequest && order.returnRequest.requested
+          )
+          : orders
+        ).map((order, index) => (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 border-gray-200 p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-700 cursor-pointer"
+            key={index}
+            onClick={() =>
+              order.returnRequest && order.returnRequest.requested
+                ? setModalOrder(order)
+                : null
+            }
+          >
+            <div className="flex flex-col gap-2">
+              {order.items.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <img
+                    src={
+                      item.image?.[0] ||
+                      "https://via.placeholder.com/100x100?text=No+Image"
+                    }
+                    alt={item.name}
+                    className="w-12 h-12 object-cover rounded"
+                    onError={(e) => {
+                      if (
+                        e.target.src !==
+                        "https://via.placeholder.com/100x100?text=No+Image"
+                      ) {
+                        e.target.src =
+                          "https://via.placeholder.com/100x100?text=No+Image";
+                      }
+                    }}
+                  />
+                  <div>
+                    <p className="font-medium">Tên: {item.name}</p>
+                    <p className="text-gray-500">Size: {item.size}</p>
+                    <p className="text-gray-500">Số lượng: {item.quantity}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="pl-4">
+              <p className="mt-3 mb-2 font-medium">
+                Tên khách hàng:{" "}
+                {order.address.firstName + " " + order.address.lastName}
+              </p>
               <div>
-                {order.items.map((item, index) => {
-                  if (index === order.items.length - 1) {
-                    return (
-                      <p className="py-0.5" key={index}>
-                        {item.name} x {item.quantity} <span>{item.size}</span>
-                      </p>
-                    );
-                  } else {
-                    return (
-                      <p className="py-0.5" key={index}>
-                        {item.name} x {item.quantity} <span>{item.size}</span> ,
-                      </p>
-                    );
-                  }
-                })}
-              </div>
-              <p className="mt-3 mb-2 font-medium">{order.address.firstName + " " + order.address.lastName}</p>
-              <div>
-                <p>{order.address.street + ","}</p>
+                <p>Địa chỉ: {order.address.street},</p>
                 <p>
                   {order.address.city +
                     ", " +
@@ -196,51 +360,133 @@ const Orders = ({ token }) => {
                     order.address.zipcode}
                 </p>
               </div>
-              <p>{order.address.phone}</p>
+              <p className="mt-2">Số điện thoại: {order.address.phone}</p>
             </div>
-            <div >
-              <p className="text-sm sm:text-[15px]">Số sản phẩm: {order.items.length}</p>
+            <div>
+              <p className="text-sm sm:text-[15px]">
+                Số lượng: {order.items.length}
+              </p>
               <p className="mt-3">Phương thức: {order.paymentMethod}</p>
-              <p>Thanh toán: {order.payment ? 'Đã thanh toán' : 'Chưa thanh toán'}</p>
+              <p>
+                Thanh toán: {order.payment ? "Đã thanh toán" : "Chờ thanh toán"}
+              </p>
               <p>Ngày đặt: {new Date(order.date).toLocaleDateString()}</p>
+              {/* Hiển thị trạng thái đổi trả/hoàn tiền nếu có */}
+              {order.returnRequest && order.returnRequest.requested && (
+                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-300 rounded">
+                  <p className="text-yellow-700 font-semibold">
+                    Yêu cầu đổi trả/hoàn tiền:{" "}
+                    <b>{order.returnRequest.status}</b>
+                  </p>
+                  <p className="text-xs text-gray-700">
+                    Lý do: {order.returnRequest.reason}
+                  </p>
+                  {order.returnRequest.adminNote && (
+                    <p className="text-xs text-gray-500">
+                      Ghi chú admin: {order.returnRequest.adminNote}
+                    </p>
+                  )}
+                  {/* Nếu trạng thái là pending, cho phép admin xử lý */}
+                  {order.returnRequest.status === "pending" && (
+                    <div className="mt-2 flex flex-col gap-1">
+                      <button
+                        className="px-2 py-1 bg-green-500 text-white rounded text-xs"
+                        onClick={async () => {
+                          const adminNote = prompt(
+                            "Ghi chú khi duyệt đổi trả/hoàn tiền:"
+                          );
+                          await axios.post(
+                            backendUrl + "/api/order/process-return",
+                            {
+                              orderId: order._id,
+                              status: "approved",
+                              adminNote,
+                            },
+                            { headers: { token } }
+                          );
+                          localStorage.setItem(
+                            "revenueNeedsUpdate",
+                            Date.now()
+                          );
+                          toast.success("Đã duyệt yêu cầu đổi trả/hoàn tiền!");
+                          fetchAllOrders();
+                        }}
+                      >
+                        Duyệt yêu cầu
+                      </button>
+                      <button
+                        className="px-2 py-1 bg-red-500 text-white rounded text-xs"
+                        onClick={async () => {
+                          const adminNote = prompt("Lý do từ chối:");
+                          await axios.post(
+                            backendUrl + "/api/order/process-return",
+                            {
+                              orderId: order._id,
+                              status: "rejected",
+                              adminNote,
+                            },
+                            { headers: { token } }
+                          );
+                          localStorage.setItem(
+                            "revenueNeedsUpdate",
+                            Date.now()
+                          );
+                          toast.success(
+                            "Đã từ chối yêu cầu đổi trả/hoàn tiền!"
+                          );
+                          fetchAllOrders();
+                        }}
+                      >
+                        Từ chối yêu cầu
+                      </button>
+                      <button
+                        className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+                        onClick={async () => {
+                          const adminNote = prompt("Ghi chú khi hoàn tiền:");
+                          await axios.post(
+                            backendUrl + "/api/order/process-return",
+                            {
+                              orderId: order._id,
+                              status: "refunded",
+                              adminNote,
+                            },
+                            { headers: { token } }
+                          );
+                          toast.success("Đã hoàn tiền cho đơn hàng!");
+                          fetchAllOrders();
+                        }}
+                      >
+                        Đánh dấu đã hoàn tiền
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            <p className="text-sm sm:text-[15px]">{order.amount.toLocaleString()} {currency}</p>
-            <select onChange={(event)=>statusHandler(event, order._id)} value={order.status} className="p-2 font-semibold">
-              <option value="Đã đặt hàng">Đã đặt hàng</option>
-              <option value="Đang đóng gói">Đang đóng gói</option>
-              <option value="Đã gửi hàng">Đã gửi hàng</option>
-              <option value="Đang giao hàng">Đang giao hàng</option>
-              <option value="Đã giao">Đã giao</option>
-            </select>
+            <p className="text-sm sm:text-[15px] font-bold">
+              {order.amount} {currency}
+            </p>
+            <div className="flex flex-col gap-2">
+              <select
+                onChange={(event) => statusHandler(event, order._id)}
+                value={order.status}
+                className="p-2 font-semibold border rounded"
+              >
+                <option value="Order Placed">Đã đặt hàng</option>
+                <option value="Packing">Đang đóng gói</option>
+                <option value="Shipped">Đã gửi hàng</option>
+                <option value="Out for delivery">Đang giao hàng</option>
+                <option value="Delivered">Đã giao hàng</option>
+              </select>
+              <button
+                onClick={(e) => deleteSingleOrder(e, order._id)}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm font-semibold"
+              >
+                Xóa đơn hàng
+              </button>
+            </div>
           </div>
         ))}
-      </div>
-      {/* Pagination */}
-      <div className="flex gap-2 mt-4 flex-wrap">
-        {Array.from({ length: totalPages }, (_, i) => i + 1)
-          .filter(page =>
-            page === 1 ||
-            page === totalPages ||
-            (page >= currentPage - 1 && page <= currentPage + 1)
-          )
-          .reduce((acc, page, idx, arr) => {
-            if (idx > 0 && page - arr[idx - 1] > 1) acc.push('...');
-            acc.push(page);
-            return acc;
-          }, [])
-          .map((page, idx) =>
-            page === '...' ? (
-              <span key={`ellipsis-${idx}`} className="px-3 py-1">...</span>
-            ) : (
-              <button
-                key={`page-${page}-${idx}`}
-                className={`px-3 py-1 rounded ${currentPage === page ? 'bg-black text-white' : 'bg-gray-200'}`}
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </button>
-            )
-          )}
       </div>
     </div>
   );

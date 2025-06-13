@@ -1,5 +1,5 @@
 import express from 'express'
-import { placeOrder, placeOrderStripe, placeOrderVnpay, vnpayReturn, allOrder, userOrders, updateStatus, verifyStripe, totalRevenue, revenueByDay, revenueByMonth, revenueByProduct, } from '../controllers/orderController.js'
+import { placeOrder, placeOrderStripe, placeOrderVnpay, vnpayReturn, allOrder, userOrders, updateStatus, verifyStripe, totalRevenue, revenueByDay, revenueByMonth, revenueByProduct, requestReturnOrder, processReturnOrder, getReturnOrders } from '../controllers/orderController.js'
 import adminAuth from '../middleware/adminAuth.js'
 import authUser from '../middleware/auth.js'
 
@@ -26,5 +26,11 @@ orderRouter.get('/revenue', adminAuth, totalRevenue);
 orderRouter.get('/revenue-by-day', adminAuth, revenueByDay);
 orderRouter.get('/revenue-by-month', adminAuth, revenueByMonth);
 orderRouter.get('/revenue-by-product', adminAuth, revenueByProduct);
+
+// Đổi trả/hoàn tiền
+orderRouter.post("/return-request", authUser, requestReturnOrder); // user gửi yêu cầu
+orderRouter.post("/process-return", adminAuth, processReturnOrder); // admin xử lý
+orderRouter.get("/return-orders", adminAuth, getReturnOrders); // admin lấy danh sách
+
 export default orderRouter;
 // 12"35

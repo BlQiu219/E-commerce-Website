@@ -6,6 +6,14 @@ const orderSchema = new mongoose.Schema({
     amount: { type: Number, required: true },
     address: { type: Object, required: true },
     status: { type: String, required: true, default: 'Đã đặt hàng' },
+    returnRequest: {
+        requested: { type: Boolean, default: false },
+        reason: String,
+        status: { type: String, enum: ["pending", "approved", "rejected"] },
+        requestDate: Date,
+        processDate: Date,
+        adminNote: String,
+    },
     paymentMethod: { type: String, required: true },
     payment: { type: Boolean, required: true, default: false },
     date: { type: Number, required: true }
